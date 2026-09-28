@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#6467f2">
+
+    <meta name="description" content="Recall — приложение для интервального повторения конспектов">
+
+    <title>Recall — интервальное повторение</title>
+
+    <!-- PWA -->
+    <link rel="manifest" href="./manifest.json">
+
+    <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="./recall.css">
+
+    <!-- JS -->
+    <script src="./recall.js" defer></script>
+</head>
+
+
+<body>
+
+    <div class="app">
+
+        <!-- HEADER -->
+
+        <header>
+
+            <div class="logo">
+
+                <img class="logo-icon" src="./image.png" alt="Recall logo">
+
+                <div>
+                    <h1>Recall AI</h1>
+
+                    <p>
+                        Твой конспект не забудется
+                    </p>
+                </div>
+
+            </div>
+
+
+            <nav>
+
+                <button class="nav-btn active" data-page="dashboard">
+                    Главная
+                </button>
+
+                <button class="nav-btn" data-page="review">
+                    Повторить
+                </button>
+
+                <button class="nav-btn" data-page="schedule">
+                    Расписание
+                </button>
+
+                <button class="nav-btn" data-page="cards">
+                    Материалы
+                </button>
+
+            </nav>
+
+        </header>
+
+
+
+        <!-- =========================
+         DASHBOARD
+    ========================== -->
+
+        <section id="dashboard" class="page active">
+
+            <div class="hero">
+
+                <h2 id="greeting">
+                    Добрый день 👋
+                </h2>
+
+                <p>
+                    Добавляй конспекты —
+                    Recall сам напомнит когда повторить.
+                </p>
+
+            </div>
+
+
+            <!-- STATS -->
+
+            <div class="stats">
+
+                <div class="stat">
+
+                    <div class="stat-label">
+                        🔥 Streak
+                    </div>
+
+                    <div class="stat-value" id="streakValue">
+                        0
+                    </div>
+
+                    <div class="stat-small">
+                        дней подряд
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <div class="stat-label">
+                        🧠 На сегодня
+                    </div>
+
+                    <div class="stat-value" id="dueValue">
+                        0
+                    </div>
+
+                    <div class="stat-small">
+                        тем
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <div class="stat-label">
+                        ⚡ XP
+                    </div>
+
+                    <div class="stat-value" id="xpValue">
+                        0
+                    </div>
+
+                    <div class="stat-small">
+                        всего
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <div class="stat-label">
+                        📚 Материалов
+                    </div>
+
+                    <div class="stat-value" id="cardsValue">
+                        0
+                    </div>
+
+                    <div class="stat-small">
+                        сохранено
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- TODAY -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h3>
+                            Сегодня
+                        </h3>
+
+                        <p id="todayDescription">
+                        </p>
+
+                    </div>
+
+
+                    <button class="button" id="startReviewButton">
+                        Начать →
+                    </button>
+
+                </div>
+
+
+                <div id="todayList" class="today-list">
+                </div>
+
+
+                <div class="progress-section">
+
+                    <div class="progress-info">
+
+                        <span>
+                            Дневной прогресс
+                        </span>
+
+                        <span id="progressText">
+                            0 / 0
+                        </span>
+
+                    </div>
+
+
+                    <div class="progress-bar">
+
+                        <div class="progress-fill" id="dailyProgress">
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =========================
+                 AI STUDY TOPIC
+            ========================== -->
+
+            <div class="panel study-start">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h3>
+                            ✨ Изучить новую тему
+                        </h3>
+
+                        <p>
+                            AI составит краткий конспект и тест из 5 вопросов для проверки знаний.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <form id="studyTopicForm" class="form-grid">
+
+                    <div class="form-row">
+
+                        <div>
+
+                            <label for="studyTopicInput">
+                                Тема
+                            </label>
+
+                            <input id="studyTopicInput" placeholder="Present Perfect" required>
+
+                        </div>
+
+
+                        <div>
+
+                            <label for="studySubjectInput">
+                                Предмет
+                            </label>
+
+                            <input id="studySubjectInput" placeholder="English" required>
+
+                        </div>
+
+                    </div>
+
+
+                    <div>
+
+                        <label for="studyExamInput">
+
+                            Дата экзамена
+
+                            <span class="optional">
+                                — необязательно
+                            </span>
+
+                        </label>
+
+                        <input id="studyExamInput" type="date">
+
+                        <div class="helper">
+                            Если экзамена нет — оставь пустым.
+                        </div>
+
+                    </div>
+
+
+                    <div id="studyError" class="study-error" style="display: none;">
+                    </div>
+
+
+                    <button type="submit" id="startStudyButton" class="button">
+                        ✨ Начать изучение
+                    </button>
+
+                </form>
+
+            </div>
+
+
+
+            <!-- ADD MATERIAL -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h3>
+                            + Добавить конспект
+                        </h3>
+
+                        <p>
+                            Добавь тему из своей тетради.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <form id="addCardForm" class="form-grid">
+
+                    <div class="form-row">
+
+                        <div>
+
+                            <label for="subjectInput">
+                                Предмет
+                            </label>
+
+                            <input id="subjectInput" placeholder="Physics" required>
+
+                        </div>
+
+
+                        <div>
+
+                            <label for="titleInput">
+                                Название темы
+                            </label>
+
+                            <input id="titleInput" placeholder="Lenses" required>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="form-row">
+
+                        <div>
+
+                            <label for="pageInput">
+
+                                Страница в тетради
+
+                                <span class="optional">
+                                    — необязательно
+                                </span>
+
+                            </label>
+
+                            <input id="pageInput" placeholder="34">
+
+                        </div>
+
+
+                        <div>
+
+                            <label for="examInput">
+
+                                Дата экзамена
+
+                                <span class="optional">
+                                    — необязательно
+                                </span>
+
+                            </label>
+
+                            <input id="examInput" type="date">
+
+                            <div class="helper">
+                                Если экзамена нет — оставь пустым.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div>
+
+                        <label for="questionInput">
+                            Вопрос для себя
+                        </label>
+
+                        <textarea id="questionInput" placeholder="Как работают собирающие линзы?" required></textarea>
+
+                    </div>
+
+
+
+                    <div>
+
+                        <label for="answerInput">
+                            Короткий ответ
+                        </label>
+
+                        <textarea id="answerInput" placeholder="Собирающая линза..." required></textarea>
+
+                    </div>
+
+
+                    <button type="submit" class="button">
+                        Добавить материал
+                    </button>
+
+                </form>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================
+         REVIEW
+    ========================== -->
+
+        <section id="review" class="page">
+
+            <div class="review-container">
+
+                <div id="reviewStatus" class="review-status">
+                </div>
+
+
+                <div id="reviewArea">
+
+                    <div class="empty">
+
+                        <div class="empty-icon">
+                            🧠
+                        </div>
+
+                        <h3>
+                            Повторения
+                        </h3>
+
+                        <p>
+                            Здесь появятся темы,
+                            которые пора повторить.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================
+         SCHEDULE
+    ========================== -->
+
+        <section id="schedule" class="page">
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h3>
+                            Ближайшие повторения
+                        </h3>
+
+                        <p>
+                            План на следующие 14 дней
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div id="upcomingList" class="upcoming-list">
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================
+         MATERIALS
+    ========================== -->
+
+        <section id="cards" class="page">
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h3>
+                            Мои материалы
+                        </h3>
+
+                        <p id="materialsCount">
+                            0 материалов
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="toolbar">
+
+                    <select id="subjectFilter">
+
+                        <option value="">
+                            Все темы
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div id="cardsList" class="cards-list">
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <!-- =========================
+         STUDY MODAL (LESSON & QUIZ)
+    ========================== -->
+
+    <div id="studyModal" class="study-modal" role="dialog" aria-modal="true" style="display: none;">
+
+        <div class="study-modal-backdrop" id="studyModalBackdrop">
+        </div>
+
+        <div class="study-modal-content">
+
+            <button id="closeStudyModalButton" class="study-modal-close" type="button" aria-label="Закрыть">
+                ✕
+            </button>
+
+            <div id="studyModalBody">
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
